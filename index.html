@@ -283,6 +283,35 @@ button,.card,.opt,.sw,.chip,.tabs button{-webkit-user-select:none;user-select:no
 .shead{padding-top:max(14px,env(safe-area-inset-top))}
 @media (max-width:639px){.sheet{max-height:calc(100% - env(safe-area-inset-top) - 8px)}.shead{padding-top:14px}}
 .savebar{padding-bottom:calc(20px + env(safe-area-inset-bottom));bottom:calc(-24px - env(safe-area-inset-bottom));margin-bottom:calc(-24px - env(safe-area-inset-bottom))}
+
+/* ---------- Гость пришёл ---------- */
+.arrive{display:flex;align-items:center;gap:14px;width:100%;border:0;border-radius:18px;padding:16px 18px;margin-bottom:14px;background:var(--honey);color:var(--on-accent);text-align:left;font:inherit;box-shadow:0 10px 28px rgba(123,30,38,.28);cursor:pointer}
+.arrive .em{font-size:34px;line-height:1}
+.arrive b{display:block;font-family:var(--display);font-size:28px;font-weight:600;line-height:1.05}
+.arrive span{display:block;font-size:13px;opacity:.88;margin-top:2px}
+.bdaybar{background:var(--honey-soft);border-left:3px solid var(--gold);border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:14px;font-weight:600}
+.alist{display:flex;flex-direction:column;gap:8px}
+.arow{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px 12px;color:var(--ink);font:inherit;cursor:pointer}
+.arow:hover{border-color:var(--honey)}
+.arow .av{width:54px;height:54px}
+.arow .t{min-width:0;flex:1}
+.arow b{display:block;font-size:16px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.arow small{display:block;color:var(--muted);font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.arow .n{font-weight:800;color:var(--honey-deep);font-size:14px;white-space:nowrap}
+.arow .w{color:var(--warn);font-weight:800}
+.abig{width:100%;font-size:17px;padding:15px}
+.hl{display:grid;gap:8px}
+.hl .r{display:flex;gap:12px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.hl .r .i{font-size:22px;line-height:1.15;flex:none}
+.hl .r b{display:block;font-size:12px;color:var(--muted);font-weight:700}
+.hl .r p{margin:0;font-weight:700;font-size:16px;overflow-wrap:anywhere;white-space:pre-wrap}
+.hl .r.warn{background:var(--warn-soft);border-color:transparent;border-left:4px solid var(--warn)}
+.hl .r.warn b{color:var(--warn)}
+.tips{display:grid;gap:8px}
+.tip{background:var(--honey-soft);border-left:3px solid var(--gold);border-radius:10px;padding:10px 12px;font-weight:600;font-size:15px}
+.marked{text-align:center;font-weight:800;color:var(--honey-deep);background:var(--surface);border:1.5px dashed var(--honey);border-radius:12px;padding:10px}
+.alinks{display:flex;gap:8px}
+.alinks .btn{flex:1}
 </style>
 </head>
 <body>
@@ -732,6 +761,9 @@ function renderHome(){
   var h='<div class="wrap">'+header("Книга гостей");
   h+='<section class="stats" aria-label="Счёт"><div class="stat hot"><b>'+todayV+'</b><span>'+plural(todayV,"визит","визита","визитов")+' сегодня</span></div>'+
      '<div class="stat"><b>'+total+'</b><span>всего визитов</span></div><div class="stat"><b>'+state.guests.length+'</b><span>'+plural(state.guests.length,"гость","гостя","гостей")+' в книге</span></div></section>';
+  h+='<button class="arrive" data-act="arrive"><span class="em" aria-hidden="true">👋</span><span><b>Гость пришёл</b><span>Найти за секунду и увидеть, что он любит</span></span></button>';
+  var bdNow=state.guests.filter(function(g){return bdayDays(g)===0;});
+  if(bdNow.length)h+='<div class="bdaybar">🎂 Сегодня день рождения: '+bdNow.map(function(g){return esc(g.name);}).join(", ")+'</div>';
   if(todayG.length)h+='<div class="today"><div class="faces">'+todayG.slice(0,8).map(function(g){return avHTML(g.av,"head");}).join("")+'</div><span>Сегодня заходили: '+todayG.map(function(g){return esc(g.name);}).join(", ")+'</span></div>';
   if(hasEx)h+='<div class="banner"><span>Здесь три гостя-примера, чтобы было видно, как всё работает.</span><button class="btn small" data-act="clearEx">Убрать примеры</button></div>';
   h+='<div class="toolbar"><label class="search"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16.5 16.5 L21 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><input id="q" type="search" placeholder="Имя, блюдо, примета…" value="'+esc(ui.q)+'" aria-label="Поиск гостя"></label>'+
@@ -766,6 +798,7 @@ function openGuest(id){
     '<div class="hero">'+avHTML(g.av)+'<div><h3>'+esc(g.name)+'</h3>'+(g.desc?'<p>'+esc(g.desc)+'</p>':'')+'<div class="meta"><span class="lvl l'+l[0]+'">'+l[1]+'</span>'+(g.ex?'<span class="cnt">пример</span>':'')+'</div></div></div>'+
     '<div class="kv"><div><b>'+n+'</b><span>'+plural(n,"визит","визита","визитов")+'</span></div><div><b>'+ago(lastVisit(g))+'</b><span>последний раз</span></div><div><b>'+esc(g.table||"—")+'</b><span>стол · '+esc(g.lang||"—")+'</span></div></div>';
   if(g.important)h+='<div class="box alert"><h4>Важно помнить</h4><p>'+esc(g.important)+'</p></div>';
+  if(g.bday){var bdd=bdayDays(g);h+='<div class="box"><h4>День рождения</h4><p>🎂 '+esc(bdayText(g))+(bdd===0?' — сегодня!':bdd!==null&&bdd<=7?' — через '+bdd+' '+plural(bdd,"день","дня","дней"):'')+'</p></div>';}
   h+='<div class="box"><h4>Отметить визит</h4><div class="visitrow"><input class="input" id="vo" placeholder="Что заказал(а)? Можно пусто" aria-label="Что заказал гость"><button class="btn" data-act="visit" data-id="'+g.id+'">+1</button></div>'+
      (sugg.length?'<div class="chips" style="margin-top:10px">'+sugg.slice(0,8).map(function(s){return '<button class="chip" data-act="fill" data-v="'+esc(s)+'">'+esc(s)+'</button>';}).join("")+'</div>':'')+'</div>';
   if(g.fav.length||t.length){
@@ -840,7 +873,7 @@ var draft=null,tab="skin",sec="face",hist=[];
 function openEditor(id,kind){
   if(kind==="staff")return openStaffEditor(id);
   var g=id?G(id):null;
-  draft=g?JSON.parse(JSON.stringify(g)):{id:uid(),name:"",desc:"",fav:[],important:"",notes:"",table:"",lang:"Рус",created:new Date().toISOString(),av:randomAv(),visits:[]};
+  draft=g?JSON.parse(JSON.stringify(g)):{id:uid(),name:"",desc:"",fav:[],important:"",notes:"",table:"",lang:"Рус",bday:"",created:new Date().toISOString(),av:randomAv(),visits:[]};
   draft.av=norm(draft.av);draft._new=!g;tab="skin";sec=g?"face":"ready";hist=[];
   var h='<div class="ov edit"><div class="sheet" role="dialog" aria-modal="true" aria-label="Редактор гостя">'+
     '<div class="shead"><h2>'+(g?"Изменить гостя":"Новый гость")+'</h2><button class="x" data-act="eclose" aria-label="Закрыть без сохранения">×</button></div><div class="sbody">'+
@@ -852,6 +885,7 @@ function openEditor(id,kind){
     '<div class="field"><label for="f-imp">Важно помнить</label><input class="input" id="f-imp" maxlength="140" value="'+esc(draft.important)+'" placeholder="Без сахара, нельзя орехи, лактоза…"></div>'+
     '<div class="row2"><div class="field"><label for="f-table">Обычный стол</label><input class="input" id="f-table" maxlength="12" value="'+esc(draft.table)+'" placeholder="№ или «у окна»"></div>'+
     '<div class="field"><span style="font-size:13px;font-weight:800">Язык общения</span><div class="chips" id="langs">'+LANGS.map(function(l){return '<button class="chip" data-act="lang" data-v="'+l+'" aria-pressed="'+(draft.lang===l)+'">'+l+'</button>';}).join("")+'</div></div></div>'+
+    '<div class="field"><label for="f-bday">День рождения</label><input class="input" type="date" id="f-bday" value="'+esc(draft.bday||"")+'"><small>Если не знаешь год — выбери любой, важны день и месяц</small></div>'+
     '<div class="field"><label for="f-notes">Заметки</label><textarea class="input" id="f-notes" placeholder="Привычки, о чём любит поговорить, как платит">'+esc(draft.notes)+'</textarea></div>'+
     '<p class="err" id="ferr" hidden>Впиши имя или прозвище, чтобы сохранить гостя.</p>'+
     '<div class="savebar"><button class="btn ghost" data-act="eclose">Отмена</button><button class="btn" data-act="save">Сохранить</button></div>'+
@@ -906,7 +940,7 @@ function paintEditor(){
 function pushHist(){hist.push(JSON.stringify(draft.av));if(hist.length>40)hist.shift();}
 function readForm(){
   function v(id){return (document.getElementById(id).value||"").trim();}
-  draft.name=v("f-name");draft.desc=v("f-desc");draft.important=v("f-imp");draft.table=v("f-table");draft.notes=v("f-notes");
+  draft.name=v("f-name");draft.desc=v("f-desc");draft.important=v("f-imp");draft.table=v("f-table");draft.notes=v("f-notes");draft.bday=v("f-bday");
   draft.fav=v("f-fav").split(",").map(function(s){return s.trim();}).filter(Boolean);
 }
 function saveDraft(){
@@ -951,6 +985,113 @@ function openVisitEditor(id,ix){
     '<div class="actions"><button class="btn ghost" data-act="vecancel">Отмена</button><button class="btn" data-act="vesave">Сохранить</button></div></div></div>');
   lockScroll(true);
 }
+
+/* ---------- Гость пришёл ---------- */
+var arr=null;
+function bdayDays(g){
+  if(!g.bday)return null;var m=String(g.bday).match(/(\d{4})-(\d{2})-(\d{2})/);if(!m)return null;
+  var now=new Date();now.setHours(0,0,0,0);
+  var d=new Date(now.getFullYear(),+m[2]-1,+m[3]);if(d<now)d=new Date(now.getFullYear()+1,+m[2]-1,+m[3]);
+  return Math.round((d-now)/864e5);
+}
+function bdayText(g){var m=String(g.bday||"").match(/(\d{4})-(\d{2})-(\d{2})/);if(!m)return "";return new Date(2000,+m[2]-1,+m[3]).toLocaleDateString("ru-RU",{day:"numeric",month:"long"});}
+function usualOrder(g){
+  var cnt={},best=null;
+  g.visits.forEach(function(v){var o=(v.o||"").trim();if(!o)return;var k=o.toLowerCase();cnt[k]=cnt[k]||{t:o,n:0};cnt[k].n++;if(!best||cnt[k].n>=best.n)best=cnt[k];});
+  if(best&&best.n>=2)return best.t;
+  if(g.fav.length)return g.fav.slice(0,2).join(", ");
+  return best?best.t:"";
+}
+function todayVisit(g){var t=dk(Date.now());for(var i=g.visits.length-1;i>=0;i--)if(dk(g.visits[i].d)===t)return g.visits[i];return null;}
+function tipsFor(g){
+  var n=g.visits.length,tv=todayVisit(g),next=tv?n:n+1,out=[];
+  var bd=bdayDays(g);
+  if(bd===0)out.push("🎂 Сегодня день рождения! Поздравь и, если можно, сделай комплимент от заведения.");
+  else if(bd!==null&&bd<=7)out.push("🎂 Через "+bd+" "+plural(bd,"день","дня","дней")+" день рождения — можно поздравить заранее.");
+  if(!tv&&[5,10,25,50,75,100,150,200].indexOf(next)>-1)out.push("🎉 Это будет "+next+"-й визит! Можно сделать маленький комплимент от заведения.");
+  if(!tv&&level(next)[0]>level(n)[0]&&next>=3)out.push("⭐ С этим визитом гость станет «"+level(next)[1]+"».");
+  var lv=lastVisit(g);
+  if(!tv&&lv){var gap=Math.floor((Date.now()-new Date(lv))/864e5);if(gap>=30)out.push("👋 Не заходил(а) "+gap+" "+plural(gap,"день","дня","дней")+" — поприветствуй тепло, скажи, что рады видеть снова.");}
+  if(n===0&&!tv)out.push("🙂 Первый визит — познакомься и запомни имя.");
+  else if(n===1&&!tv)out.push("🙂 Второй раз! Покажи, что помнишь гостя — это очень запоминается.");
+  if(g.lang==="Eng")out.push("🇬🇧 Общается на английском.");
+  else if(g.lang==="Қаз")out.push("🇰🇿 Предпочитает общаться на казахском.");
+  return out;
+}
+function arrList(){
+  var q=(arr.q||"").trim().toLowerCase();
+  var list=state.guests.filter(function(g){if(!q)return true;return (g.name+" "+g.desc+" "+g.fav.join(" ")+" "+g.notes+" "+g.important+" "+(g.table?"стол "+g.table:"")).toLowerCase().indexOf(q)>-1;});
+  list.sort(function(a,b){
+    if(q){var an=a.name.toLowerCase().indexOf(q)===0?0:1,bn=b.name.toLowerCase().indexOf(q)===0?0:1;if(an!==bn)return an-bn;}
+    return b.visits.length-a.visits.length;
+  });
+  return list;
+}
+function paintArrList(){
+  var box=document.getElementById("alist");if(!box)return;
+  var list=arrList(),q=(arr.q||"").trim();
+  var h=list.slice(0,40).map(function(g){var n=g.visits.length,u=usualOrder(g);
+    return '<button class="arow" data-act="apick" data-id="'+g.id+'">'+avHTML(g.av,"head")+'<span class="t"><b>'+esc(g.name)+(bdayDays(g)===0?' 🎂':'')+'</b><small>'+(g.important?'<span class="w">⚠ </span>':'')+esc(g.desc||u||"")+'</small></span><span class="n">'+n+' '+plural(n,"визит","визита","визитов")+'</span></button>';}).join("");
+  if(!list.length)h='<p style="color:var(--muted);margin:4px 0">Никого не нашлось'+(q?' по «'+esc(q)+'»':'')+'.</p>';
+  h+='<button class="btn ghost abig" data-act="anew">+ Новый гость'+(q&&!list.length?': «'+esc(q)+'»':'')+'</button>';
+  box.innerHTML=h;
+}
+function paintArrive(){
+  var body=document.getElementById("arrbody"),title=document.getElementById("arrtitle");if(!body)return;
+  if(arr.step==="find"){
+    title.textContent="Гость пришёл";
+    body.innerHTML='<label class="search"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16.5 16.5 L21 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><input id="aq" type="search" autocomplete="off" placeholder="Имя, примета, стол, любимое блюдо…" value="'+esc(arr.q)+'" aria-label="Найти гостя"></label>'+
+      '<div class="alist" id="alist"></div>';
+    paintArrList();
+    var qi=document.getElementById("aq");if(qi)setTimeout(function(){qi.focus();},50);
+    return;
+  }
+  if(arr.step==="new"){
+    title.textContent="Новый гость";
+    body.innerHTML='<p style="margin:0;color:var(--muted);font-size:14px">Самое главное — за 20 секунд. Персонажа и детали можно дополнить потом.</p>'+
+      '<div class="field" style="margin:0"><label for="an-name">Имя или прозвище *</label><input class="input" id="an-name" maxlength="60" value="'+esc(arr.q||"")+'" placeholder="Например: Айгерим, «Парень с гитарой»"></div>'+
+      '<div class="field" style="margin:0"><label for="an-o">Что заказал(а)</label><input class="input" id="an-o" placeholder="Капучино, круассан"></div>'+
+      '<div class="field" style="margin:0"><label for="an-desc">Как узнать</label><input class="input" id="an-desc" maxlength="120" placeholder="Очки, с ноутбуком, сидит у окна"></div>'+
+      '<div class="field" style="margin:0"><label for="an-imp">Важно помнить</label><input class="input" id="an-imp" maxlength="140" placeholder="Аллергия, без сахара…"></div>'+
+      '<p class="err" id="anerr" hidden>Впиши имя или прозвище.</p>'+
+      '<button class="btn abig" data-act="anewsave">Сохранить и отметить визит</button>'+
+      '<button class="btn ghost" data-act="aback">← Назад к поиску</button>';
+    setTimeout(function(){var x=document.getElementById("an-name");if(x)x.focus();},50);
+    return;
+  }
+  var g=G(arr.id);if(!g){arr.step="find";return paintArrive();}
+  title.textContent="Гость пришёл";
+  var n=g.visits.length,l=level(n),u=usualOrder(g),tv=todayVisit(g),tips=tipsFor(g),t=topOrders(g);
+  var h='<div class="hero">'+avHTML(g.av)+'<div><h3>'+esc(g.name)+'</h3>'+(g.desc?'<p>'+esc(g.desc)+'</p>':'')+'<div class="meta"><span class="lvl l'+l[0]+'">'+l[1]+'</span><span class="cnt">'+n+' '+plural(n,"визит","визита","визитов")+' · '+esc(ago(lastVisit(g)))+'</span></div></div></div>';
+  var rows='';
+  if(g.important)rows+='<div class="r warn"><span class="i">⚠️</span><div><b>Важно</b><p>'+esc(g.important)+'</p></div></div>';
+  if(u)rows+='<div class="r"><span class="i">☕</span><div><b>Обычно берёт</b><p>'+esc(u)+'</p></div></div>';
+  if(g.table)rows+='<div class="r"><span class="i">🪑</span><div><b>Любит сидеть</b><p>'+esc(/^\d+$/.test(g.table)?"Стол "+g.table:g.table)+'</p></div></div>';
+  if(g.bday)rows+='<div class="r"><span class="i">🎂</span><div><b>День рождения</b><p>'+esc(bdayText(g))+'</p></div></div>';
+  if(g.notes)rows+='<div class="r"><span class="i">📝</span><div><b>Заметки</b><p>'+esc(g.notes)+'</p></div></div>';
+  if(rows)h+='<div class="hl">'+rows+'</div>';
+  if(tips.length)h+='<div class="tips">'+tips.map(function(x){return '<div class="tip">'+esc(x)+'</div>';}).join("")+'</div>';
+  if(tv)h+='<div class="marked">✓ Визит сегодня уже отмечен'+(tv.o?': '+esc(tv.o):'')+'</div>';
+  var sugg=[];g.fav.concat(t.map(function(x){return x.t;})).forEach(function(x){if(sugg.map(function(s){return s.toLowerCase();}).indexOf(x.toLowerCase())<0)sugg.push(x);});
+  h+='<div class="box"><h4>'+(tv?'Ещё один визит':'Отметить визит')+'</h4>'+
+    (u?'<button class="btn abig" data-act="ausual" data-id="'+g.id+'">Как обычно: '+esc(u)+'</button>':'')+
+    '<div class="visitrow" style="margin-top:'+(u?'10px':'0')+'"><input class="input" id="ao" placeholder="Что заказал(а)? Можно пусто" aria-label="Что заказал гость"><button class="btn" data-act="aplus" data-id="'+g.id+'">+1</button></div>'+
+    (sugg.length?'<div class="chips" style="margin-top:10px">'+sugg.slice(0,8).map(function(s){return '<button class="chip" data-act="afill" data-v="'+esc(s)+'">'+esc(s)+'</button>';}).join("")+'</div>':'')+'</div>';
+  h+='<div class="box"><h4>Узнал(а) что-то новое?</h4><div class="visitrow"><input class="input" id="anote" maxlength="200" placeholder="Например: любит без льда"><button class="btn ghost" data-act="anote" data-id="'+g.id+'">Сохранить</button></div></div>';
+  h+='<div class="alinks"><button class="btn ghost" data-act="aback">← Другой гость</button><button class="btn ghost" data-act="afull" data-id="'+g.id+'">Полная карточка</button></div>';
+  body.innerHTML=h;
+}
+function openArrive(id){
+  closeOv(".ov.arr");
+  arr={step:id?"guest":"find",q:"",id:id||null};
+  document.body.insertAdjacentHTML("beforeend",'<div class="ov arr" data-act="abg"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="arrtitle"><div class="shead"><h2 id="arrtitle">Гость пришёл</h2><button class="x" data-act="aclose" aria-label="Закрыть">×</button></div><div class="sbody" id="arrbody"></div></div></div>');
+  lockScroll(true);paintArrive();
+}
+function arrMark(g,o){
+  g.visits.push({d:new Date().toISOString(),o:o||""});
+  commit(g.name+": визит №"+g.visits.length);
+  paintArrive();
+}
 /* ---------- events ---------- */
 document.addEventListener("click",function(ev){
   var el=ev.target.closest("[data-act]");if(!el)return;
@@ -958,6 +1099,20 @@ document.addEventListener("click",function(ev){
   if(act==="bgclose"){if(ev.target===el){closeOv(".ov.det");setHash(baseHash());}return;}
   switch(act){
     case "open":openGuest(id);break;
+    case "arrive":openArrive();break;
+    case "abg":if(ev.target===el){arr=null;closeOv(".ov.arr");}break;
+    case "aclose":arr=null;closeOv(".ov.arr");break;
+    case "apick":arr.step="guest";arr.id=id;paintArrive();document.querySelector(".ov.arr .sheet").scrollTop=0;break;
+    case "aback":arr.step="find";arr.id=null;paintArrive();break;
+    case "anew":arr.step="new";paintArrive();break;
+    case "anewsave":{var nm=document.getElementById("an-name").value.trim();if(!nm){document.getElementById("anerr").hidden=false;document.getElementById("an-name").focus();break;}
+      var ng={id:uid(),name:nm,desc:document.getElementById("an-desc").value.trim(),fav:[],important:document.getElementById("an-imp").value.trim(),notes:"",table:"",lang:"Рус",bday:"",created:new Date().toISOString(),av:norm(randomAv()),visits:[{d:new Date().toISOString(),o:document.getElementById("an-o").value.trim()}]};
+      state.guests.push(ng);arr.step="guest";arr.id=ng.id;commit("Гость добавлен, визит №1");paintArrive();break;}
+    case "ausual":{var gu=G(id);if(gu)arrMark(gu,usualOrder(gu));break;}
+    case "aplus":{var gp=G(id);if(gp)arrMark(gp,document.getElementById("ao").value.trim());break;}
+    case "afill":{var ai=document.getElementById("ao");var ac=ai.value.trim();ai.value=ac?ac+", "+v:v;ai.focus();break;}
+    case "anote":{var gn=G(id),nt=document.getElementById("anote").value.trim();if(gn&&nt){var dd=new Date();gn.notes=(gn.notes?gn.notes+"\n":"")+pad2(dd.getDate())+"."+pad2(dd.getMonth()+1)+": "+nt;commit("Заметка сохранена");paintArrive();}break;}
+    case "afull":arr=null;closeOv(".ov.arr");openGuest(id);break;
     case "plus":{ev.stopPropagation();var g=G(id);if(g){g.visits.push({d:new Date().toISOString(),o:""});commit(g.name+": визит №"+g.visits.length);}break;}
     case "sort":ui.sort=v;render();break;
     case "new":openEditor(null);break;
@@ -998,15 +1153,20 @@ document.addEventListener("click",function(ev){
   }
 });
 document.addEventListener("keydown",function(ev){
-  if(ev.key==="Escape"){if(document.querySelector(".ov.c")){pendingYes=null;closeOv(".ov.c");}else if(document.querySelector(".ov.edit")){draft=null;closeOv(".ov.edit");}else if(document.querySelector(".ov.det")){closeOv(".ov.det");setHash(baseHash());}}
+  if(ev.key==="Escape"){if(document.querySelector(".ov.c")){pendingYes=null;closeOv(".ov.c");}else if(document.querySelector(".ov.arr")){arr=null;closeOv(".ov.arr");}else if(document.querySelector(".ov.edit")){draft=null;closeOv(".ov.edit");}else if(document.querySelector(".ov.det")){closeOv(".ov.det");setHash(baseHash());}}
   if((ev.key==="Enter"||ev.key===" ")&&ev.target.classList&&ev.target.classList.contains("card")){ev.preventDefault();ev.target.click();}
+  if(ev.key==="Enter"&&ev.target.id==="aq"){ev.preventDefault();var fr=document.querySelector("#alist .arow");if(fr)fr.click();}
+  if(ev.key==="Enter"&&ev.target.id==="ao"){var ab=document.querySelector('[data-act="aplus"]');if(ab)ab.click();}
+  if(ev.key==="Enter"&&ev.target.id==="anote"){var nb=document.querySelector('[data-act="anote"]');if(nb)nb.click();}
+  if(ev.key==="Enter"&&/^an-/.test(ev.target.id||"")){var sb=document.querySelector('[data-act="anewsave"]');if(sb)sb.click();}
   if(ev.key==="Enter"&&ev.target.id==="vo"){var b=document.querySelector('[data-act="visit"]');if(b)b.click();}
 });
 document.addEventListener("change",function(ev){var t=ev.target;if(t.type==="color"&&t.getAttribute("data-k")&&draft){paintEditor();}});
 document.addEventListener("input",function(ev){
   var t=ev.target;
   if(t.type==="color"&&t.getAttribute("data-k")&&draft){if(!t._h){pushHist();t._h=1;}draft.av[t.getAttribute("data-k")]=t.value;document.getElementById("pv").innerHTML=avHTML(draft.av,"bust");document.getElementById("pz").innerHTML=avHTML(draft.av,"head","zoom");t.parentNode.style.background=t.value;return;}
-if(ev.target.id==="q"){ui.q=ev.target.value;renderHome();}});
+if(ev.target.id==="q"){ui.q=ev.target.value;renderHome();}
+if(ev.target.id==="aq"&&arr){arr.q=ev.target.value;paintArrList();}});
 
 var hs=location.hash||"",hm;
 if((hm=hs.match(/^#staff-(\d)$/))){ui.view="staff";ui.br=Math.min(BRANCHES.length-1,+hm[1]);}
