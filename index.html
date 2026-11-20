@@ -129,6 +129,8 @@ button.chip:hover{border-color:var(--honey)}
 .hist .o{flex:1;color:var(--muted);overflow-wrap:anywhere}
 .hist button{border:0;background:transparent;color:var(--muted);font-size:18px;padding:2px 6px;border-radius:8px}
 .hist button:hover{color:var(--warn)}
+.hist button[data-act="editvisit"]{font-size:15px}
+.hist button[data-act="editvisit"]:hover{color:var(--honey)}
 .actions{display:flex;gap:10px;flex-wrap:wrap}
 .actions .btn{flex:1}
 /* editor */
@@ -771,7 +773,7 @@ function openGuest(id){
       (t.length?'<p style="margin-top:10px;font-size:14px;color:var(--muted)">Чаще всего заказывает: <b style="color:var(--ink)">'+esc(t[0].t)+'</b> ('+t[0].n+' '+plural(t[0].n,"раз","раза","раз")+')'+(t[1]?', потом '+esc(t[1].t)+' ('+t[1].n+')':'')+'</p>':'')+'</div>';
   }
   if(g.notes)h+='<div class="box"><h4>Заметки</h4><p>'+esc(g.notes)+'</p></div>';
-  h+='<div class="box"><h4>История визитов</h4>'+(n?'<ul class="hist">'+g.visits.slice().reverse().slice(0,30).map(function(v,i){var idx=n-1-i;return '<li><time datetime="'+v.d+'">'+fmtDate(v.d)+'</time><span class="o">'+esc(v.o||"—")+'</span><button data-act="delvisit" data-id="'+g.id+'" data-i="'+idx+'" aria-label="Удалить визит">×</button></li>';}).join("")+'</ul>'+(n>30?'<p style="font-size:13px;color:var(--muted);margin-top:6px">Показаны последние 30 из '+n+'</p>':''):'<p style="color:var(--muted)">Пока ни одного визита.</p>')+'</div>';
+  h+='<div class="box"><h4>История визитов</h4>'+(n?'<ul class="hist">'+g.visits.slice().reverse().slice(0,30).map(function(v,i){var idx=n-1-i;return '<li><time datetime="'+v.d+'">'+fmtDate(v.d)+'</time><span class="o">'+esc(v.o||"—")+'</span><button data-act="editvisit" data-id="'+g.id+'" data-i="'+idx+'" aria-label="Изменить визит">✎</button><button data-act="delvisit" data-id="'+g.id+'" data-i="'+idx+'" aria-label="Удалить визит">×</button></li>';}).join("")+'</ul>'+(n>30?'<p style="font-size:13px;color:var(--muted);margin-top:6px">Показаны последние 30 из '+n+'</p>':''):'<p style="color:var(--muted)">Пока ни одного визита.</p>')+'<button class="btn ghost small" style="margin-top:10px;width:100%" data-act="editvisit" data-id="'+g.id+'" data-i="-1">+ Добавить прошлый визит</button></div>';
   h+='<div class="actions"><button class="btn ghost" data-act="edit" data-id="'+g.id+'">Изменить</button><button class="btn danger" data-act="del" data-id="'+g.id+'">Удалить гостя</button></div>';
   h+='</div></div></div>';
   document.body.insertAdjacentHTML("beforeend",h);lockScroll(true);
@@ -935,6 +937,20 @@ function ask(text,yesLabel,fn){
   lockScroll(true);
 }
 
+
+function pad2(n){return (n<10?"0":"")+n;}
+function toLocalInput(d){var x=new Date(d);return x.getFullYear()+"-"+pad2(x.getMonth()+1)+"-"+pad2(x.getDate())+"T"+pad2(x.getHours())+":"+pad2(x.getMinutes());}
+var visitEdit=null;
+function openVisitEditor(id,ix){
+  var g=G(id);if(!g)return;var v=ix>=0?g.visits[ix]:{d:new Date().toISOString(),o:""};
+  visitEdit={id:id,ix:ix};
+  document.body.insertAdjacentHTML("beforeend",'<div class="ov c vis"><div class="sheet confirm" role="dialog" aria-modal="true" aria-label="Визит">'+
+    '<h3 style="margin:0;font-family:var(--display);font-size:24px">'+(ix>=0?"Изменить визит":"Прошлый визит")+'</h3>'+
+    '<div class="field" style="margin:0"><label for="ve-d">Дата и время</label><input class="input" type="datetime-local" id="ve-d" value="'+toLocalInput(v.d)+'"></div>'+
+    '<div class="field" style="margin:0"><label for="ve-o">Что заказал(а)</label><input class="input" id="ve-o" value="'+esc(v.o||"")+'" placeholder="Можно пусто"></div>'+
+    '<div class="actions"><button class="btn ghost" data-act="vecancel">Отмена</button><button class="btn" data-act="vesave">Сохранить</button></div></div></div>');
+  lockScroll(true);
+}
 /* ---------- events ---------- */
 document.addEventListener("click",function(ev){
   var el=ev.target.closest("[data-act]");if(!el)return;
@@ -956,6 +972,13 @@ document.addEventListener("click",function(ev){
     case "sbr":draft.branch=v;Array.prototype.forEach.call(document.querySelectorAll("#brs .chip"),function(b){b.setAttribute("aria-pressed",String(b.getAttribute("data-v")===v));});break;
     case "fill":{var i=document.getElementById("vo");var cur=i.value.trim();i.value=cur?cur+", "+v:v;i.focus();break;}
     case "visit":{var g2=G(id);if(g2){var o=document.getElementById("vo").value.trim();g2.visits.push({d:new Date().toISOString(),o:o});commit(g2.name+": визит №"+g2.visits.length);openGuest(id);}break;}
+    case "editvisit":openVisitEditor(id,+el.getAttribute("data-i"));break;
+    case "vecancel":visitEdit=null;closeOv(".ov.vis");break;
+    case "vesave":{var ve=visitEdit,gv=ve&&G(ve.id);if(gv){var dv=document.getElementById("ve-d").value,ov=document.getElementById("ve-o").value.trim();
+      var dt=dv?new Date(dv):new Date();if(isNaN(dt))dt=new Date();
+      if(ve.ix>=0){gv.visits[ve.ix].d=dt.toISOString();gv.visits[ve.ix].o=ov;}else gv.visits.push({d:dt.toISOString(),o:ov});
+      gv.visits.sort(function(a,b){return new Date(a.d)-new Date(b.d);});
+      visitEdit=null;closeOv(".ov.vis");commit(ve.ix>=0?"Визит изменён":"Визит добавлен");openGuest(ve.id);}break;}
     case "delvisit":{var g3=G(id),ix=+el.getAttribute("data-i");ask("Удалить этот визит из истории?","Удалить",function(){g3.visits.splice(ix,1);commit("Визит удалён");openGuest(id);});break;}
     case "edit":openEditor(id);break;
     case "del":{var g4=G(id);ask("Удалить гостя «"+g4.name+"» со всей историей визитов?","Удалить",function(){state.guests=state.guests.filter(function(x){return x.id!==id;});closeOv(".ov.det");setHash(baseHash());commit("Гость удалён");});break;}
