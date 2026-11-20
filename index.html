@@ -777,16 +777,72 @@ function openGuest(id){
   document.body.insertAdjacentHTML("beforeend",h);lockScroll(true);
 }
 
+/* ---------- готовые персонажи ---------- */
+var PRE_BG=["#efe4d2","#e6d6bf","#f1e3dd","#dfe1d3","#efe2bf","#d9dfe3","#e3dbe6","#e4c9c4","#cfd6c4","#dccab0"];
+var PRE_TOP=[["tee","#7b1e26"],["blouse","#efe6d6"],["turtle","#3a2a20"],["cardigan","#d9a5a0"],["long","#a7b39a"],["shirt","#f7f4ee"],["vneck","#2f3e52"],["hoodie","#c8a985"],["denim","#7d93a8"],["polo","#6f7a52"],["jacket","#3b3b3b"],["long","#b8613d"],["tee","#efe6d6"],["shirt","#7d93a8"],["turtle","#efe6d6"],["vneck","#6b4a5e"],["cardigan","#6b4a33"],["blouse","#c9a03f"],["hoodie","#3b3b3b"],["polo","#7b1e26"]];
+function PF(i,skin,face,hair,hairC,eyes,brows,mouth,ex){var t=PRE_TOP[i%PRE_TOP.length];var a={skin:skin,face:face,hair:hair,hairC:hairC,eyes:eyes,eyeC:"#2a1d14",brows:brows,nose:"soft",mouth:mouth,det:"none",beard:"none",head:"none",accC:"#7b1e26",build:"regular",top:t[0],topC:t[1],pat:"plain",neck:"none",neckC:"#7b1e26",glas:"none",jew:"none",hold:"none",bg:PRE_BG[i%PRE_BG.length]};for(var k in ex)a[k]=ex[k];return a;}
+var PRESETS_F=[
+  PF(0,"#efd5bd","cheek","long","#141110","mono","straight","soft",{jew:"studs"}),
+  PF(1,"#e8c7a8","oval","highpony","#1f1915","slant","thin","smile",{jew:"hoops",det:"lipstick",build:"slim"}),
+  PF(2,"#f5e1cf","round","bob","#2e2219","mono","straight","soft",{glas:"round"}),
+  PF(3,"#ddb792","cheek","bun","#1f1915","almond","normal","lips",{jew:"earrings"}),
+  PF(4,"#efd5bd","heart","fringe","#141110","slant","straight","smile",{det:"blush",build:"slim"}),
+  PF(5,"#e8c7a8","oval","lob","#6a4a32","mono","thin","soft",{jew:"necklace"}),
+  PF(6,"#d0a57f","cheek","ponytail","#1f1915","mono","straight","grin",{}),
+  PF(7,"#efd5bd","round","wavy","#4e3626","almond","normal","smile",{det:"dimples"}),
+  PF(8,"#f5e1cf","oval","curtain","#b07c4f","slant","thin","lips",{jew:"studs",det:"lipstick"}),
+  PF(9,"#e8c7a8","cheek","long","#3a2a20","mono","straight","flat",{glas:"thin"}),
+  PF(10,"#ddb792","heart","pixie","#141110","almond","thin","smile",{jew:"hoops"}),
+  PF(11,"#efd5bd","round","spacebuns","#2e2219","mono","normal","grin",{det:"blush"}),
+  PF(12,"#d0a57f","oval",null,"#1f1915","almond","normal","soft",{head:"scarf",accC:"#6b4a5e",hair:"none"}),
+  PF(13,"#e8c7a8","cheek","highpony","#8a5e3c","slant","straight","soft",{glas:"cat"}),
+  PF(14,"#f5e1cf","oval","long","#d2ad79","mono","thin","smile",{jew:"pearls"}),
+  PF(15,"#ddb792","round","bob","#7b1e26","almond","straight","lips",{det:"lipstick",jew:"studs"}),
+  PF(16,"#c1916b","cheek","bun","#141110","mono","normal","smile",{glas:"square",build:"broad"}),
+  PF(17,"#efd5bd","heart","wavy","#141110","slant","thin","soft",{jew:"earrings"}),
+  PF(18,"#e8c7a8","oval",null,"#1f1915","mono","straight","smile",{head:"scarf",accC:"#efe6d6",hair:"none",build:"broad"}),
+  PF(19,"#f5e1cf","cheek","fringe","#4e3626","almond","straight","flat",{head:"clip",accC:"#c9a03f"})
+];
+var PRESETS_M=[
+  PF(0,"#e8c7a8","cheek","fade","#141110","mono","straight","soft",{}),
+  PF(1,"#ddb792","square","undercut","#1f1915","slant","thick","smile",{build:"broad",top:"tee",topC:"#3b3b3b"}),
+  PF(2,"#efd5bd","oval","twoblock","#141110","mono","straight","soft",{build:"slim"}),
+  PF(3,"#d0a57f","cheek","short","#1f1915","almond","normal","grin",{beard:"stubble"}),
+  PF(4,"#e8c7a8","round","buzz","#141110","mono","thick","flat",{build:"broad"}),
+  PF(5,"#efd5bd","oval","side","#2e2219","slant","straight","smile",{glas:"square",top:"shirt",topC:"#f7f4ee"}),
+  PF(6,"#c1916b","cheek","quiff","#141110","mono","thick","soft",{beard:"stache"}),
+  PF(7,"#ddb792","square","slick","#1f1915","almond","serious","flat",{beard:"goatee",top:"jacket",topC:"#2f3e52"}),
+  PF(8,"#f5e1cf","oval","curtain","#3a2a20","mono","thin","smile",{build:"slim",top:"hoodie",topC:"#a7b39a"}),
+  PF(9,"#e8c7a8","cheek","fade","#1f1915","slant","straight","grin",{glas:"round"}),
+  PF(10,"#d0a57f","round","short","#141110","mono","normal","soft",{build:"broad",beard:"chin"}),
+  PF(11,"#efd5bd","cheek","twoblock","#6a4a32","almond","straight","smile",{jew:"studs",top:"denim",topC:"#7d93a8"}),
+  PF(12,"#a87a55","square","buzz","#141110","mono","thick","flat",{beard:"stubble",build:"broad"}),
+  PF(13,"#e8c7a8","oval","undercut","#2e2219","slant","normal","soft",{glas:"thin",top:"turtle",topC:"#3a2a20"}),
+  PF(14,"#ddb792","cheek","side","#141110","mono","straight","grin",{}),
+  PF(15,"#efd5bd","round","fade","#1f1915","almond","normal","smile",{glas:"square",build:"broad"}),
+  PF(16,"#c1916b","cheek","slick","#141110","mono","serious","soft",{beard:"stache",top:"shirt",topC:"#7d93a8"}),
+  PF(17,"#e8c7a8","oval","quiff","#4e3626","slant","straight","smile",{build:"slim"}),
+  PF(18,"#ddb792","square","short","#8f8a85","almond","thick","soft",{glas:"round",beard:"beard",top:"cardigan",topC:"#6b4a33"}),
+  PF(19,"#efd5bd","cheek","none","#141110","mono","normal","grin",{beard:"goatee",build:"broad"})
+];
+function presetFor(i){var a=JSON.parse(JSON.stringify(i<100?PRESETS_F[i]:PRESETS_M[i-100]));if(!a.hair)a.hair="none";
+  if(draft&&draft._kind==="staff"){a.top="uniform";a.topC="#e8e1d3";a.hold="none";a.neck="none";a.pat="plain";if(a.head!=="scarf"&&a.head!=="clip")a.head="none";}
+  return a;}
+function readyHTML(){
+  function grid(list,off){return '<div class="optgrid tall">'+list.map(function(p,i){var a=presetFor(i+off);return '<button class="opt" data-act="preset" data-v="'+(i+off)+'" aria-label="Готовый персонаж '+(i+1)+'">'+avHTML(a,"bust")+'</button>';}).join("")+'</div>';}
+  return '<p class="hint" style="margin:2px 0 10px;font-size:13px;color:var(--muted)">Выберите похожего человека, потом подправьте детали во вкладках «Лицо», «Волосы» и т.д.</p>'+
+    '<h4 style="margin:4px 0 8px">Девушки</h4>'+grid(PRESETS_F,0)+'<h4 style="margin:14px 0 8px">Парни</h4>'+grid(PRESETS_M,100);
+}
 /* ---------- editor ---------- */
 var draft=null,tab="skin",sec="face",hist=[];
 function openEditor(id,kind){
   if(kind==="staff")return openStaffEditor(id);
   var g=id?G(id):null;
   draft=g?JSON.parse(JSON.stringify(g)):{id:uid(),name:"",desc:"",fav:[],important:"",notes:"",table:"",lang:"Рус",created:new Date().toISOString(),av:randomAv(),visits:[]};
-  draft.av=norm(draft.av);draft._new=!g;tab="skin";sec="face";hist=[];
+  draft.av=norm(draft.av);draft._new=!g;tab="skin";sec=g?"face":"ready";hist=[];
   var h='<div class="ov edit"><div class="sheet" role="dialog" aria-modal="true" aria-label="Редактор гостя">'+
     '<div class="shead"><h2>'+(g?"Изменить гостя":"Новый гость")+'</h2><button class="x" data-act="eclose" aria-label="Закрыть без сохранения">×</button></div><div class="sbody">'+
-    '<div class="preview"><div id="pv"></div><div class="pvside"><div id="pz"></div><button class="btn ghost small" data-act="rand">Случайно всё</button><button class="btn ghost small" data-act="randsec">Случайно: эта часть</button><button class="btn ghost small" data-act="undo" id="undo">↶ Отменить</button></div></div>'+
+    '<div class="preview"><div id="pv"></div><div class="pvside"><div id="pz"></div><button class="btn small" data-act="sec" data-v="ready">★ Готовые лица</button><button class="btn ghost small" data-act="rand">Случайно всё</button><button class="btn ghost small" data-act="randsec">Случайно: эта часть</button><button class="btn ghost small" data-act="undo" id="undo">↶ Отменить</button></div></div>'+
     '<div class="seg" role="group" aria-label="Что настраивать" id="secs"></div><div class="tabs" role="tablist" id="tabs"></div><div id="opts"></div>'+
     '<div class="field"><label for="f-name">Имя или прозвище *</label><input class="input" id="f-name" maxlength="60" value="'+esc(draft.name)+'" placeholder="Например: Айгерим, «Парень с гитарой»"></div>'+
     '<div class="field"><label for="f-desc">Как узнать</label><input class="input" id="f-desc" maxlength="120" value="'+esc(draft.desc)+'" placeholder="Внешность, где обычно сидит"></div>'+
@@ -806,10 +862,10 @@ function openEditor(id,kind){
 function openStaffEditor(id){
   var x=id?S(id):null;
   draft=x?JSON.parse(JSON.stringify(x)):{id:uid(),name:"",role:"",branch:BRANCHES[ui.br],schedule:"",phone:"",notes:"",created:new Date().toISOString(),av:staffAv()};
-  draft.av=norm(draft.av);draft._new=!x;draft._kind="staff";tab="top";sec="outfit";hist=[];
+  draft.av=norm(draft.av);draft._new=!x;draft._kind="staff";tab="top";sec=x?"outfit":"ready";hist=[];
   var h='<div class="ov edit"><div class="sheet" role="dialog" aria-modal="true" aria-label="Редактор сотрудника">'+
     '<div class="shead"><h2>'+(x?"Изменить сотрудника":"Новый сотрудник")+'</h2><button class="x" data-act="eclose" aria-label="Закрыть без сохранения">×</button></div><div class="sbody">'+
-    '<div class="preview"><div id="pv"></div><div class="pvside"><div id="pz"></div><button class="btn ghost small" data-act="rand">Случайно всё</button><button class="btn ghost small" data-act="randsec">Случайно: эта часть</button><button class="btn ghost small" data-act="undo" id="undo">↶ Отменить</button></div></div>'+
+    '<div class="preview"><div id="pv"></div><div class="pvside"><div id="pz"></div><button class="btn small" data-act="sec" data-v="ready">★ Готовые лица</button><button class="btn ghost small" data-act="rand">Случайно всё</button><button class="btn ghost small" data-act="randsec">Случайно: эта часть</button><button class="btn ghost small" data-act="undo" id="undo">↶ Отменить</button></div></div>'+
     '<div class="seg" role="group" aria-label="Что настраивать" id="secs"></div><div class="tabs" role="tablist" id="tabs"></div><div id="opts"></div>'+
     '<div class="field"><label for="f-name">Имя *</label><input class="input" id="f-name" maxlength="60" value="'+esc(draft.name)+'" placeholder="Например: Рауан"></div>'+
     '<div class="field"><label for="f-role">Должность</label><input class="input" id="f-role" maxlength="40" value="'+esc(draft.role)+'" placeholder="Официант, бариста…"><div class="chips">'+ROLES.map(function(r){return '<button class="chip" data-act="role" data-v="'+r+'">'+r+'</button>';}).join("")+'</div></div>'+
@@ -832,6 +888,7 @@ function paintEditor(){
   var u=document.getElementById("undo");if(u)u.disabled=!hist.length;
   document.getElementById("secs").innerHTML=SECS.map(function(x){return '<button data-act="sec" data-v="'+x[0]+'" aria-pressed="'+(sec===x[0])+'">'+x[1]+'</button>';}).join("");
   document.getElementById("tabs").innerHTML=GROUPS.filter(function(gr){return gr.s===sec;}).map(function(gr){return '<button role="tab" data-act="tab" data-v="'+gr.k+'" aria-selected="'+(tab===gr.k)+'">'+gr.t+'</button>';}).join("");
+  if(sec==="ready"){document.getElementById("tabs").innerHTML="";document.getElementById("opts").innerHTML=readyHTML();return;}
   var gr=GROUPS.filter(function(x){return x.k===tab;})[0],h,cur=draft.av[gr.k];
   if(gr.c){
     var inPal=gr.c.indexOf(cur)>-1;
@@ -906,10 +963,11 @@ document.addEventListener("click",function(ev){
     case "yes":{var f=pendingYes;pendingYes=null;closeOv(".ov.c");if(f)f();break;}
     case "no":pendingYes=null;closeOv(".ov.c");break;
     case "tab":tab=v;paintEditor();break;
-    case "sec":sec=v;tab=GROUPS.filter(function(g){return g.s===v;})[0].k;paintEditor();break;
+    case "sec":sec=v;if(v!=="ready")tab=GROUPS.filter(function(g){return g.s===v;})[0].k;paintEditor();break;
+    case "preset":pushHist();draft.av=norm(presetFor(+v));paintEditor();break;
     case "set":if(el.tagName==="LABEL")break;pushHist();draft.av[el.getAttribute("data-k")]=v;paintEditor();break;
     case "rand":pushHist();draft.av=norm(draft._kind==="staff"?staffAv():randomAv());paintEditor();break;
-    case "randsec":{pushHist();var rnd=randomAv();GROUPS.forEach(function(g){if(g.s===sec&&rnd[g.k]!=null)draft.av[g.k]=rnd[g.k];});paintEditor();break;}
+    case "randsec":{pushHist();var rnd=randomAv();if(sec==="ready"){draft.av=norm(draft._kind==="staff"?staffAv():rnd);paintEditor();break;}GROUPS.forEach(function(g){if(g.s===sec&&rnd[g.k]!=null)draft.av[g.k]=rnd[g.k];});paintEditor();break;}
     case "undo":if(hist.length){draft.av=JSON.parse(hist.pop());paintEditor();}break;
     case "lang":draft.lang=v;Array.prototype.forEach.call(document.querySelectorAll("#langs .chip"),function(b){b.setAttribute("aria-pressed",String(b.getAttribute("data-v")===v));});break;
     case "save":saveDraft();break;
