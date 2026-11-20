@@ -2,12 +2,12 @@
 <html lang="ru">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Гости Бала"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#f3ece0">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Гости Бала"><meta name="apple-mobile-web-app-status-bar-style" content="black"><meta name="theme-color" content="#0e0f12">
 <title>Гости Бала</title>
 <link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" href="icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
 <style id="app-style">
 :root{
   /* BAL bakery & coffee: ivory and latte walls, burgundy trim, espresso wood, thin serif wordmark, arched windows */
@@ -312,6 +312,119 @@ button,.card,.opt,.sw,.chip,.tabs button{-webkit-user-select:none;user-select:no
 .marked{text-align:center;font-weight:800;color:var(--honey-deep);background:var(--surface);border:1.5px dashed var(--honey);border-radius:12px;padding:10px}
 .alinks{display:flex;gap:8px}
 .alinks .btn{flex:1}
+
+/* ================= Тёмный фокус (единый дизайн) ================= */
+:root:not(#_){
+  --bg:#0e0f12; --surface:#16181d; --surface-2:#1e2128; --line:#2a2e37;
+  --ink:#ecedef; --muted:#9aa0ac; --faint:#878d96;
+  --honey:#c6f432; --honey-deep:#c6f432; --honey-soft:#c6f4321f; --on-accent:#0e0f12; --gold:#9aa0ac;
+  --warn:#ffb547; --warn-soft:#ffb5471f; --danger:#ff6b6b;
+  --display:Inter,-apple-system,BlinkMacSystemFont,"SF Pro Text",system-ui,sans-serif;
+  --body:Inter,-apple-system,BlinkMacSystemFont,"SF Pro Text",system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,monospace;
+  color-scheme:dark;
+}
+body{font-size:15px;line-height:22px}
+:focus-visible{outline:2px solid var(--honey);outline-offset:2px}
+.tiles{display:none}
+.mark{font-family:var(--body);font-weight:800;font-size:30px;letter-spacing:.04em;line-height:1}
+.brand .tag i{display:none}
+.brand .tag b{font-size:11px;letter-spacing:.08em;color:var(--muted);font-weight:600}
+header.top{margin-bottom:20px}
+.sync{border-radius:8px;font-weight:600}
+.sync.ok{color:var(--muted)}
+.navbtn{border:1px solid var(--line);background:var(--surface-2);color:var(--ink);border-radius:12px;font-weight:600}
+.navbtn:hover{background:var(--surface-2);color:var(--ink);border-color:var(--muted)}
+/* показатели: числа моноширинные, лайм — только у «сегодня» */
+.stat{border-radius:16px}
+.stat b{font-family:var(--mono);font-size:28px;line-height:32px;font-weight:600;letter-spacing:-.02em}
+.stat span{font-size:13px;color:var(--muted)}
+.stat.hot{background:var(--surface);border-color:var(--line);color:var(--ink)}
+.stat.hot b{color:var(--honey)}
+/* главная кнопка экрана */
+.arrive{border-radius:16px;box-shadow:none;padding:16px 18px;min-height:72px}
+.arrive b{font-family:var(--body);font-size:22px;font-weight:700;letter-spacing:-.01em}
+.arrive span{opacity:.75}
+.bdaybar,.banner{background:var(--surface);border:1px solid var(--line);border-radius:12px}
+.today{border-radius:12px;border-style:solid}
+/* поиск и сортировка */
+.search{background:var(--surface-2);border-radius:8px;min-height:48px}
+.search input::placeholder,.input::placeholder{color:var(--faint)}
+.seg,.search{border-radius:12px}
+.seg button{border-radius:9px}
+.seg button[aria-pressed="true"]{background:var(--surface-2);color:var(--ink);box-shadow:inset 0 0 0 1px var(--line)}
+/* карточки гостей */
+.card{border-radius:16px;box-shadow:none}
+.card:hover{border-color:var(--muted)}
+.card h3{font-family:var(--body);font-size:17px;line-height:24px;font-weight:600}
+.cnt{font-family:var(--mono);font-weight:500}
+.lvl{border-radius:6px;letter-spacing:.06em;font-weight:700}
+.lvl.l0{background:var(--surface-2);color:var(--muted)}
+.lvl.l1{background:var(--surface-2);color:var(--ink)}
+.lvl.l2{background:var(--honey-soft);color:var(--honey)}
+.lvl.l3{background:var(--honey);color:var(--on-accent)}
+.warnchip{border-radius:6px}
+.plus{border:1px solid var(--line);background:var(--surface-2);color:var(--ink);font-family:var(--mono);font-size:16px;border-radius:12px;width:48px;height:48px}
+.plus:hover,.plus:active{background:var(--honey);border-color:var(--honey);color:var(--on-accent)}
+/* «Новый гость» — вторичная: лайм на экране один */
+.fab{background:var(--surface-2);color:var(--ink);border:1px solid var(--line);border-radius:14px;box-shadow:none;min-height:56px}
+.fab span{color:var(--honey)}
+/* кнопки */
+.btn{border-radius:12px;min-height:48px;font-weight:600;letter-spacing:0}
+.btn.small{min-height:36px;border-radius:8px}
+.btn.ghost{background:var(--surface-2);border:1px solid var(--line);color:var(--ink)}
+.btn.danger{background:transparent;border:1px solid var(--danger);color:var(--danger)}
+.x{border-radius:10px;border:1px solid var(--line);background:var(--surface-2)}
+/* шторки */
+.ov{background:rgba(0,0,0,.6)}
+.sheet{background:var(--bg);border-top:1px solid var(--line);border-radius:16px 16px 0 0}
+@media (min-width:640px){.sheet{border:1px solid var(--line);border-radius:16px}}
+.shead{background:var(--bg)}
+.shead h2{font-family:var(--body);font-size:17px;font-weight:600}
+.hero h3{font-family:var(--body);font-size:26px;line-height:32px;font-weight:700;letter-spacing:-.01em}
+.hero .av{border:2px solid var(--line);box-shadow:none}
+.preview .av{border:2px solid var(--line);box-shadow:none}
+.kv div{border-radius:12px}
+.kv b{font-family:var(--mono);font-size:17px;font-weight:600}
+.box{border-radius:16px}
+.box h4{font-family:var(--body);font-style:normal;font-size:11px;line-height:14px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.box.alert{background:var(--warn-soft);border:1px solid var(--warn)}
+.box.alert h4{color:var(--warn)}
+.hist time{font-family:var(--mono);font-weight:500;font-size:13px}
+.hist button:hover{color:var(--danger)}
+.input{background:var(--surface-2);border-radius:8px;min-height:48px}
+textarea.input{min-height:96px}
+.chip{border:1px solid var(--line);border-radius:8px;min-height:36px;display:inline-flex;align-items:center}
+.chip.fav{background:var(--honey-soft);border-color:transparent;color:var(--honey)}
+.chip[aria-pressed="true"]{background:var(--honey-soft);color:var(--honey);border-color:var(--honey)}
+.tabs button{border:1px solid var(--line);border-radius:8px}
+.tabs button[aria-selected="true"]{background:var(--honey-soft);border-color:var(--honey);color:var(--honey)}
+.opt{border:1px solid var(--line);border-radius:12px}
+.opt[aria-pressed="true"]{border-color:var(--honey);background:var(--honey-soft)}
+.sw{border-color:var(--bg)}
+.err{color:var(--danger)}
+.toast{background:var(--surface-2);color:var(--ink);border:1px solid var(--line);box-shadow:none}
+.savebar{background:var(--bg)}
+/* сотрудники */
+.branches{border-radius:16px}
+.branches h4{font-family:var(--body);font-style:normal;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.branches button{border-left:0;border-radius:8px}
+.branches button span{font-family:var(--mono);font-weight:500}
+.branches button[aria-current="true"]{background:var(--honey-soft);color:var(--honey)}
+.bhead h2{font-family:var(--body);font-size:26px;font-weight:700;letter-spacing:-.01em}
+/* режим «Гость пришёл» */
+.arow{border-radius:12px;min-height:64px}
+.arow .n{font-family:var(--mono);font-weight:500;color:var(--muted)}
+.hl .r{border-radius:12px}
+.hl .r.warn{border:1px solid var(--warn)}
+.tip{background:var(--surface);border:1px solid var(--line);border-left:1px solid var(--line);border-radius:12px}
+.marked{border:1px solid var(--honey);background:var(--honey-soft);color:var(--honey);border-radius:12px}
+.stat.hot span,.stat span{color:var(--muted)}
+.cnt,.arow .n{font-family:var(--body);font-weight:600}
+.kv b{font-family:var(--body);font-weight:700}
+.ov.arr [data-act="aplus"]{background:var(--surface-2);border:1px solid var(--line);color:var(--ink)}
+.fab[data-act="snew"]{background:var(--honey);border-color:var(--honey);color:var(--on-accent)}
+.fab[data-act="snew"] span{color:var(--on-accent)}
 </style>
 </head>
 <body>
@@ -667,7 +780,7 @@ function buildDoc(){
   var js=document.getElementById("app-script").textContent;
   var json=JSON.stringify(state).replace(/</g,"\\u003c");
   var S="scr"+"ipt";
-  return '<!DOCTYPE html>\n<html lang="ru">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="BAL"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#f3ece0">\n<title>Гости Бала</title>\n<link rel="preconnect" href="https://fonts.googleapis.com">\n<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">\n<style id="app-style">'+css+'</style>\n</head>\n<body>\n<div id="app"></div>\n<'+S+' type="application/json" id="app-state">'+json+'</'+S+'>\n<'+S+' id="app-script">'+js+'</'+S+'>\n</body>\n</html>\n';
+  return '<!DOCTYPE html>\n<html lang="ru">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="BAL"><meta name="apple-mobile-web-app-status-bar-style" content="black"><meta name="theme-color" content="#0e0f12">\n<title>Гости Бала</title>\n<link rel="preconnect" href="https://fonts.googleapis.com">\n<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">\n<style id="app-style">'+css+'</style>\n</head>\n<body>\n<div id="app"></div>\n<'+S+' type="application/json" id="app-state">'+json+'</'+S+'>\n<'+S+' id="app-script">'+js+'</'+S+'>\n</body>\n</html>\n';
 }
 function commit(msg){
   state.rev=(state.rev||0)+1;dirty=true;
