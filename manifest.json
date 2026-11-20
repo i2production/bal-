@@ -1,6 +1,6 @@
 {
-  "name": "Гости Бала",
-  "short_name": "Гости Бала",
+  "name": "BAL · Смена",
+  "short_name": "BAL",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
